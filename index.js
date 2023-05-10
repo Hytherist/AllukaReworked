@@ -16,6 +16,14 @@ client.on('ready', () => {
     // remind(client);
 })
 
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+
+    if (interaction.commandName === 'ping') {
+        interaction.reply('pong')
+    }
+})
+
 client.on('messageCreate', message => {
     if (message.content === 'ping') {
         message.reply('pong')
