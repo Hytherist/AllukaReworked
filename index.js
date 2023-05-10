@@ -13,7 +13,7 @@ const client = new Client({
 
 client.on('ready', () => {
     console.log('bot is ready')
-    remind(client);
+    // remind(client);
 })
 
 client.on('messageCreate', message => {
