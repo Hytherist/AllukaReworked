@@ -1,10 +1,15 @@
-const Discord = require('discord.js')
-const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"] });
+const { Client, GatewayIntentBits } = require('discord.js')
 require('dotenv/config')
 
 // const remind = require('./functionalities/reminder');
 
-client.login(process.env.TOKEN)
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+    ],
+})
 
 client.on('ready', () => {
     console.log('bot is ready')
@@ -16,3 +21,5 @@ client.on('messageCreate', message => {
         message.reply('pong')
     } 
 })
+
+client.login(process.env.TOKEN)
