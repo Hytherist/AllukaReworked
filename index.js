@@ -23,19 +23,19 @@ client.on('interactionCreate', (interaction) => {
         interaction.reply('pong')
     } else
 
-    if (interaction.commandName === 'event') {
-        const name = interaction.options.get('create-event');
-        const startTime = interaction.options.get('start-time').value;
+        if (interaction.commandName === 'event') {
+            const name = interaction.options.get('create-event');
+            const startTime = interaction.options.get('start-time').value;
 
-        const exampleEmbed = new EmbedBuilder()
-            .setColor('#CC8899')
-            .setTitle(name)
-            .setDescription(`Event starting at ${startTime}`)
-            .setThumbnail('./images/server.webp')
-            .setTimestamp()
-            .setFooter({ text: 'Dogbless', iconURL: './images/server.webp' });
-        interaction.reply(exampleEmbed)
-    }
+            const embed = new EmbedBuilder()
+                .setColor('#CC8899')
+                .setTitle(name)
+                .setDescription(`Event starting at ${startTime}`)
+                .setThumbnail('./images/server.webp')
+                .setTimestamp()
+                .setFooter({ text: 'Dogbless', iconURL: './images/server.webp' });
+            interaction.reply({ embeds: [embed]});
+        }
 })
 
 client.on('messageCreate', message => {
