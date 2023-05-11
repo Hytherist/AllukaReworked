@@ -1,6 +1,5 @@
 require('dotenv/config');
-const { REST, Routes } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { REST, Routes, ApplicationCommandOptionType } = require('discord.js');
 
 const commands = [
     {
@@ -9,19 +8,21 @@ const commands = [
     },
 
     {
-        name: 'Create event',
+        name: 'event',
         description: 'Creates an event',
         options: [
-            new SlashCommandBuilder()
-                .setName('Name of event')
-                .setDescription('Enter the name of the event')
-                .setRequired(true),
-            new SlashCommandBuilder()
-                .setName('start-time')
-                .setDescription('Enter the start time of the event')
-                .setRequired(true),
+            {
+                name: 'create-event',
+                description: 'Enter the name of the event',
+                type: ApplicationCommandOptionType.String,
+            },
+            {
+                name: 'start-time',
+                description: 'Enter the start time of the event',
+                type: ApplicationCommandOptionType.Number,
+            }
         ]
-    }
+    },
 ];
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);

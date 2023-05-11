@@ -23,11 +23,11 @@ client.on('interactionCreate', (interaction) => {
 
     if (interaction.commandName === 'ping') {
         interaction.reply('pong')
-    }
+    } else
 
-    if (interaction.commandName === 'Create event') {
-        const name = interaction.options.getString('Name of event');
-        const startTime = interaction.options.getString('start-time');
+    if (interaction.commandName === 'event') {
+        const name = interaction.options.getString('create-event');
+        const startTime = interaction.options.getNumber('start-time');
 
         const exampleEmbed = new EmbedBuilder()
             .setColor('#CC8899')
