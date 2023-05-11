@@ -22,7 +22,13 @@ const commands = [
                 description: 'Enter the start time of the event',
                 type: ApplicationCommandOptionType.Number,
                 required: true,
-            }
+            },
+            {
+                name: 'where',
+                description: 'Enter the location',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            },
         ]
     },
 ];
@@ -37,6 +43,11 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
             Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.XXGUILDID),
             { body: commands }
         )
+
+        await rest.put(
+            Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DBGUILDID),
+            { body: commands }
+        );
 
         console.log('Slash commands registerd.')
 
