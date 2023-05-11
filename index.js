@@ -1,7 +1,5 @@
-const { Client, GatewayIntentBits } = require('discord.js')
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js')
 require('dotenv/config')
-
-const { EmbedBuilder } = require('discord.js');
 
 // const remind = require('./functionalities/reminder');
 
@@ -36,7 +34,7 @@ client.on('interactionCreate', (interaction) => {
             .setThumbnail('./images/server.webp')
             .setTimestamp()
             .setFooter({ text: 'Dogbless', iconURL: './images/server.webp' });
-        interaction.reply({ embeds: [exampleEmbed] })
+        interaction.reply(exampleEmbed)
     }
 })
 
