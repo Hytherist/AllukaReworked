@@ -26,8 +26,8 @@ client.on('interactionCreate', (interaction) => {
     } else
 
     if (interaction.commandName === 'event') {
-        const name = interaction.options.getString('create-event');
-        const startTime = interaction.options.getNumber('start-time');
+        const name = interaction.options.get('create-event');
+        const startTime = interaction.options.get('start-time').value;
 
         const exampleEmbed = new EmbedBuilder()
             .setColor('#CC8899')

@@ -15,11 +15,13 @@ const commands = [
                 name: 'create-event',
                 description: 'Enter the name of the event',
                 type: ApplicationCommandOptionType.String,
+                required: true,
             },
             {
                 name: 'start-time',
                 description: 'Enter the start time of the event',
                 type: ApplicationCommandOptionType.Number,
+                required: true,
             }
         ]
     },
