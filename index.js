@@ -1,6 +1,8 @@
 const { Client, GatewayIntentBits } = require('discord.js')
 require('dotenv/config')
 
+const { EmbedBuilder } = require('discord.js');
+
 // const remind = require('./functionalities/reminder');
 
 const client = new Client({
@@ -22,12 +24,26 @@ client.on('interactionCreate', (interaction) => {
     if (interaction.commandName === 'ping') {
         interaction.reply('pong')
     }
+
+    if (interaction.commandName === 'Create event') {
+        const name = interaction.options.getString('Name of event');
+        const startTime = interaction.options.getString('start-time');
+
+        const exampleEmbed = new EmbedBuilder()
+            .setColor('#CC8899')
+            .setTitle(name)
+            .setDescription(`Event starting at ${startTime}`)
+            .setThumbnail('./images/server.webp')
+            .setTimestamp()
+            .setFooter({ text: 'Dogbless', iconURL: './images/server.webp' });
+        interaction.reply({ embeds: [exampleEmbed] })
+    }
 })
 
 client.on('messageCreate', message => {
     if (message.content === 'ping') {
         message.reply('pong')
-    } 
+    }
 })
 
 client.login(process.env.TOKEN)
