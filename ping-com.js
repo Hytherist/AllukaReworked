@@ -20,7 +20,7 @@ const commands = [
             {
                 name: 'start-time',
                 description: 'Enter the start time of the event',
-                type: ApplicationCommandOptionType.Number,
+                type: ApplicationCommandOptionType.String,
                 required: true,
             },
             {
