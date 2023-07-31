@@ -249,4 +249,4 @@ client.on('messageCreate', message => {
     }
 });
 
-client.login("MTEwNTI4ODUzNDIyODc0MjI0Ng.GbKVIX.wKNMr5brWIWEsu15qpl369oAtDNu7cGD-9kUtA");
+client.login(process.env.token);
