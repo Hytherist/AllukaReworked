@@ -23,7 +23,7 @@ const commands = [
                 type: ApplicationCommandOptionType.Integer,
                 required: true,
                 choices: Array.from({ length: 12 }, (_, i) => ({
-                    name: (i + 1).toString(), 
+                    name: (i + 1).toString(),
                     value: i + 1,
                 })),
             },
@@ -93,6 +93,31 @@ const commands = [
                 required: true,
             },
         ]
+    },
+
+    {
+        name: 'avatar',
+        description: 'Display user avatar',
+        options: [
+            {
+                name: 'user',
+                description: 'The user (mention) to display the avatar of.',
+                type: ApplicationCommandOptionType.User,
+                required: true,
+            },
+        ],
+
+    },
+
+    {
+        name: 'logs',
+        description: 'Fetch the last 10 deleted messages',
+        choices: [
+            { name: 'true', value: '1' },
+            { name: 'false', value: '0' },
+        ],
+        required: true,
+
     },
 ];
 

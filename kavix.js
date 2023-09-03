@@ -1,6 +1,12 @@
 const { ComponentType, GatewayIntentBits, EmbedBuilder, Client, ActivityType  } = require('discord.js');
 require('dotenv/config');
 
+const fs = require('fs');
+
+const deletedMessagesByGuild = {};
+const maxDeletedMessages = 10;
+
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -10,7 +16,6 @@ const client = new Client({
     ],
 });
 
-// Set the logging level to debug for detailed logging
 client.on('debug', console.log);
 
 client.on('ready', () => {
@@ -106,14 +111,13 @@ client.on('interactionCreate', async (interaction) => {
 
                     const index = attendees.indexOf(i.user.tag);
                     if (index !== -1) {
-                        // If the user is not in the attendees list, send a message and return early
+                       
                         i.reply({ content: `You are already on the attendees list.`, ephemeral: true });
                         return;
                     }
-                    // Add the user's tag to the list of attendees
+                   
                     attendees.push(i.user.tag);
 
-                    // Create a new embed with the updated attendees list
                     const newEmbed = new EmbedBuilder()
                         .setColor('#CC8899')
                         .setTitle(nameofevent)
@@ -129,19 +133,18 @@ client.on('interactionCreate', async (interaction) => {
                 } else if (i.customId === 'button2') {
 
                     console.log("Not Interested");
-                    // Handle button click event for 'Remove' button
+                    
                     const index = attendees.indexOf(i.user.tag);
                     if (index === -1) {
-                        // If the user is not in the attendees list, send a message and return early
+
                         i.reply({ content: `You are not on the attendees list.`, ephemeral: true });
                         return;
                     }
 
-                    attendees.splice(index, 1); // Remove the user from the attendees list
+                    attendees.splice(index, 1);
 
                     const attendanceText = attendees.length > 0 ? attendees.join('\n') : 'No one is attending yet';
 
-                    // Create a new embed with the updated attendees list
                     const newEmbed = new EmbedBuilder()
                         .setColor('#CC8899')
                         .setTitle(nameofevent)
@@ -156,49 +159,6 @@ client.on('interactionCreate', async (interaction) => {
                     i.reply({ content: `You have removed yourself from the attendees list.`, ephemeral: true });
                 }
 
-                // } else {
-
-                //     console.log("Delete");
-
-                //     message = await i.reply({ content: `Would you like to delete this event?`, components: [confirmation], ephemeral: true });
-
-                //     console.log("Here");
-
-                //     collector = i.message.createMessageComponentCollector({
-                //         filter: j => j.user.id === i.user.id, // Only listen to the user's response
-                //         time: 15000, // Time in milliseconds to wait for the user's response (15 seconds in this case)
-                //         max: 1, // Maximum number of interactions to collect (1 in this case)
-                //         errors: ['time'], // How to handle timeout errors
-                //     });
-            
-                //     collector.on('collect', j => {
-                //         console.log("inside");
-                //         if (j.customId === 'confirm') {
-                //             console.log("Confirm");
-                //             // Perform the deletion process here
-                //             const fetchedChannel = i.message.guild.channels.cache.find(r => r.name === nameofevent);
-            
-                //             if (fetchedChannel) {
-                //                 fetchedChannel.delete().then(() => {
-                //                     console.log('Event channel deleted.');
-                //                 }).catch(error => {
-                //                     console.error('Error deleting event channel:', error);
-                //                 });
-                //             } else {
-                //                 console.error('Event channel not found.');
-                //             }
-                //         } else if (j.customId === 'cancel') {
-                //             console.log("Cancel");
-                //             // Handle the cancelation here
-                //             j.reply({ content: 'Deletion canceled.', ephemeral: true });
-                //         }
-                //     });
-            
-                //     collector.on('end', collected => {
-                //         console.log(`Collected second: ${collected.size} interactions.`);
-                //     });            
-
-                // }
             });
 
             collector.on('end', collected => {
@@ -224,7 +184,7 @@ client.on('interactionCreate', async (interaction) => {
             });
         } else if (botType === '1') {
             client.user.setPresence({
-                activities: [{ name: botActivity, type: ActivityType.Streaming }],
+                activities: [{ name: botActivity, type: ActivityType.Listening }],
                status: botStatus,
             });
         } else if (botType === '3') {
@@ -240,13 +200,66 @@ client.on('interactionCreate', async (interaction) => {
         }
 
         interaction.reply("You have changed <@1105288534228742246> 's status.");
+
+    } else if (interaction.commandName === 'avatar') {
+        const user = interaction.options.getUser('user'); 
+      
+        if (!user) {
+          await interaction.reply('Please specify a user.');
+          return;
+        }
+      
+        const avatar = new EmbedBuilder()
+          .setTitle(`${user.tag}`)
+          .setImage(`${user.displayAvatarURL({ dynamic: true, size: 256 })}`)
+          .setColor('Blue'); 
+      
+        await interaction.reply({ embeds: [avatar] });
+
+    } else if (interaction.commandName === 'logs') {
+       
+        const guildID = interaction.guild.id;
+    
+        const txtFile = `${guildID}.txt`;
+    
+        fs.readFile(txtFile, 'utf8', (err, data) => {
+            if (err) {
+                console.error(`Error reading ${txtFile}:`, err);
+                interaction.reply('An error occurred while reading the deleted messages.');
+                return;
+            }
+    
+            interaction.reply(`Here are the last 10 deleted messages:\n\`\`\`${data}\`\`\``);
+        });
     }
 });
 
-client.on('messageCreate', message => {
-    if (message.content === 'ping') {
-        message.reply('pong');
+function saveDeletedMessages(guildID) {
+   
+    const deletedMessages = deletedMessagesByGuild[guildID] || [];
+    
+    const messagesString = deletedMessages.join('\n\n');
+
+    const txtFile = `${guildID}.txt`;
+    fs.writeFileSync(txtFile, messagesString);
+
+    deletedMessagesByGuild[guildID] = deletedMessages;
+}
+
+client.on('messageDelete', (message) => {
+   
+    const guildID = message.guild.id;
+
+    const deletedMessages = deletedMessagesByGuild[guildID] || [];
+
+    const formattedMessage = `${message.author.tag} (${new Date().toLocaleString()}): ${message.content}`;
+    deletedMessages.push(formattedMessage);
+
+    if (deletedMessages.length > maxDeletedMessages) {
+        deletedMessages.shift(); 
     }
+
+    saveDeletedMessages(guildID);
 });
 
 client.login(process.env.token);
