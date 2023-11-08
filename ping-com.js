@@ -119,6 +119,48 @@ const commands = [
         required: true,
 
     },
+
+    {
+        name: 'exchange',
+        description: 'Retrieve the exchange rate between two',
+        options: [
+            {
+                name: 'amount',
+                description: 'Enter amount',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            },
+
+            {
+                name: 'from',
+                description: 'Select currency #1',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+
+            },
+
+            {
+                name: 'to',
+                description: 'Select currency #2',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            }
+        ],
+        required: true,
+
+    },
+
+    {
+        name: 'latest',
+        description: 'Get the latest conversions',
+        required: true,
+    },
+
+    {
+        name: 'symbols',
+        description: 'Get all symbols',
+        required: true,
+    }
 ];
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
@@ -127,13 +169,23 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     try {
         console.log('Registering slash commands...')
 
-        await rest.put(
+        await rest.put( // Test
             Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.XXGUILDID),
             { body: commands }
         )
 
-        await rest.put(
+        await rest.put( // Dogbless
             Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DBGUILDID),
+            { body: commands }
+        );
+
+        await rest.put( // Where we goin
+            Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.WWGGUILDID),
+            { body: commands }
+        );
+
+        await rest.put( // Hytherist
+            Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.HGUILDID),
             { body: commands }
         );
 

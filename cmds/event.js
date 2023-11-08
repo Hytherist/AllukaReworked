@@ -1,8 +1,9 @@
 module.exports = client => {
 
+    const { ComponentType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
     client.on('interactionCreate', async (interaction) => {
         if (interaction.commandName === 'event') {
-            const { ComponentType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
             const button = new ActionRowBuilder()
                 .addComponents(

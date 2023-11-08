@@ -6,6 +6,7 @@ const eventCMD = require('./cmds/event.js');
 const logsCMD = require('./cmds/logs.js');
 const statusCMD = require('./cmds/status.js');
 const avatarCMD = require('./cmds/avatar.js');
+const exchangeCMD = require('./cmds/exchange.js');
 
 
 const client = new Client({
@@ -30,6 +31,7 @@ client.on('ready', () => {
     logsCMD(client);
     statusCMD(client);
     avatarCMD(client);
+    exchangeCMD(client);
 
     console.log('bot is ready');
 });
